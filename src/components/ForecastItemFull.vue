@@ -13,7 +13,7 @@
         <div class="right-side" v-if="forecast.weather">
           <div class="weather-image-frame" v-for="svg in weatherSvg" :key="svg">
             <img
-              :src="svg.path"
+              :src="findImg()"
               :alt="svg.title"
               class="weather-image"
               v-if="svg.title === forecast.weather[0].description"
@@ -34,8 +34,18 @@
 
 <script setup>
 import { useWeatherImgStore } from '@/stores/weatherImg'
+
 const weatherImg = useWeatherImgStore()
 const weatherSvg = weatherImg.weatherSvg
+
+const findImg = () => {
+  weatherSvg.forEach((item) => {
+    if (item.title === props.forecast.weather[0].description) {
+      console.log(item.path)
+      return item.path
+    }
+  })
+}
 
 const props = defineProps({
   forecast: {
