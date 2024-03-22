@@ -10,7 +10,8 @@
             Ощущается {{ Math.ceil(forecast.main.feels_like) }} °C
           </p>
         </div>
-
+        <!-- <img src="@/public/weather-svg/cloudy2.svg" alt="cloudy2.svg" />
+        <img src="" alt="cloudy2.svg" /> -->
         <div class="right-side" v-if="currentImage">
           <img :src="currentImage[0].path" :alt="currentImage[0].title" class="weather-image" />
         </div>
