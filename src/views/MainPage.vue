@@ -33,8 +33,8 @@
           <div class="time">{{ findDate.time }}</div>
         </div>
 
-        <div class="flex full-forecast">
-          <ForecastItemFull :forecast="forecast" />
+        <div class="flex full-forecast" v-if="forecast.weather">
+          <ForecastItemFull :forecast="forecast" :currentImage="currentImage" />
         </div>
 
         <div class="flex future-forecast" v-if="nextDaysForecastList">
@@ -131,6 +131,11 @@ const city = ref()
 const forecast = ref()
 const nextDaysForecastList = ref([])
 const errorText = ref()
+const currentImage = computed(() => {
+  const allImages = weatherImg.weatherSvg
+  const currentSvg = allImages.filter((img) => img.title === forecast.value.weather[0].description)
+  return currentSvg
+})
 
 const validator = (day, night) => {
   day = +day.slice(0, -3)
@@ -138,7 +143,7 @@ const validator = (day, night) => {
   if (nextDaysForecastList.value.length !== 0) {
     const listItemDay = nextDaysForecastList.value.filter((item) => item.dt == day)
     const listItemNight = nextDaysForecastList.value.filter((item) => item.dt == night)
-    console.log(listItemDay, listItemNight)
+    // console.log(listItemDay, listItemNight)
     if (listItemDay.length != 0 && listItemNight.length != 0) {
       const descr = listItemDay[0].weather[0].description
       const svg = weatherImg.weatherSvg.filter((item) => item.title == descr)

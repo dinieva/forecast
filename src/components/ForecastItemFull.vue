@@ -10,15 +10,9 @@
             Ощущается {{ Math.ceil(forecast.main.feels_like) }} °C
           </p>
         </div>
-        <div class="right-side" v-if="forecast.weather">
-          <div class="weather-image-frame" v-for="svg in weatherSvg" :key="svg">
-            <img
-              :src="findImg()"
-              :alt="svg.title"
-              class="weather-image"
-              v-if="svg.title === forecast.weather[0].description"
-            />
-          </div>
+
+        <div class="right-side" v-if="currentImage">
+          <img :src="currentImage[0].path" :alt="currentImage[0].title" class="weather-image" />
         </div>
       </div>
       <p class="weather-descr" v-if="forecast.weather">
@@ -33,22 +27,12 @@
 </template>
 
 <script setup>
-import { useWeatherImgStore } from '@/stores/weatherImg'
-
-const weatherImg = useWeatherImgStore()
-const weatherSvg = weatherImg.weatherSvg
-
-const findImg = () => {
-  weatherSvg.forEach((item) => {
-    if (item.title === props.forecast.weather[0].description) {
-      console.log(item.path)
-      return item.path
-    }
-  })
-}
-
 const props = defineProps({
   forecast: {
+    type: Object,
+    required: true
+  },
+  currentImage: {
     type: Object,
     required: true
   }
