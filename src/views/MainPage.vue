@@ -30,6 +30,7 @@
             <div class="day-forecast__info">
               <div class="flex-column">
                 <span class="today">сегодня</span>
+
                 <p class="week-day">{{ findDate.weekDay }}</p>
                 <p class="date">{{ findDate.dateToday }}</p>
               </div>
