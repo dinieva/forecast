@@ -9,8 +9,8 @@
         <form
           class="enter-city"
           @submit.prevent="
-            forecastStore.getCityForecast(city),
-              forecastStore.getNextDaysForecasts(city),
+            forecastStore.getCityForecast(city.trim()),
+              forecastStore.getNextDaysForecasts(city.trim()),
               setLocalStorage(city),
               (city = '')
           "
@@ -25,7 +25,7 @@
           <button class="button transparent" id="button" type="submit">GO</button>
         </form>
 
-        <div v-if="!forecastStore.errorText">
+        <div v-if="forecast.weather">
           <div class="flex day-forecast" v-if="forecast">
             <div class="day-forecast__info">
               <div class="flex-column">
@@ -171,7 +171,7 @@ const validator = (day, night) => {
 }
 
 const setLocalStorage = (city) => {
-  localStorage.setItem('город', city)
+  localStorage.setItem('город', city.trim())
 }
 
 watchEffect(() => (forecast.value = forecastStore.forecast))

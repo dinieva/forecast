@@ -15,11 +15,12 @@ export const useFindDateStore = defineStore('findDate', () => {
       // const dateUTCInMs = dateInMs - myTimeZoneValue * 1000
       const dateUTCInMs = dateInMs + myTimeZoneValue
       //шаг 3 время для города по поиску отталкиваясь от  (utc 0)
+      
       const timezone = computed(() => {
          return forecastStore.timezone
       })
      let newDateInMs = dateUTCInMs + timezone.value * 1000 // время для города в другой таймзоне в миллисекундах
-      
+    
       return new Date(newDateInMs)
     })
     
@@ -46,7 +47,11 @@ export const useFindDateStore = defineStore('findDate', () => {
       return dateFind.value.toTimeString().substring(0, 5)
     })
 
-
+console.log('dateFind timezone '+ dateFind.value,
+  weekDay.value,
+  weekDayNum.value,
+  dateToday.value,
+  time.value);
     return {
         myTimeZoneValue,
         dateFind,
