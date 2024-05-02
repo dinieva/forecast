@@ -1,58 +1,63 @@
 <!-- Главная страница: приветствие, погода, дата день недели, город -->
 <template>
   <div class="date-info">
-    <div class="wrapper">
-      <form
-        class="enter-city"
-        @submit.prevent="
-          forecastStore.getCityForecast(city),
-            forecastStore.getNextDaysForecasts(city),
-            setLocalStorage(city),
-            (city = '')
-        "
-      >
-        <input
-          class="searchbar transparent"
-          id="search"
-          type="text"
-          placeholder="Введите город"
-          v-model="city"
-        />
-        <button class="button transparent" id="button" type="submit">GO</button>
-      </form>
+    <div class="loder" v-if="loader">
+      <Loader />
+    </div>
+    <div v-else>
+      <div class="wrapper">
+        <form
+          class="enter-city"
+          @submit.prevent="
+            forecastStore.getCityForecast(city),
+              forecastStore.getNextDaysForecasts(city),
+              setLocalStorage(city),
+              (city = '')
+          "
+        >
+          <input
+            class="searchbar transparent"
+            id="search"
+            type="text"
+            placeholder="Введите город"
+            v-model="city"
+          />
+          <button class="button transparent" id="button" type="submit">GO</button>
+        </form>
 
-      <div v-if="!forecastStore.errorText">
-        <div class="flex day-forecast" v-if="forecast">
-          <div class="day-forecast__info">
-            <div class="flex-column">
-              <span class="today">сегодня</span>
-              <p class="week-day">{{ findDate.weekDay }}</p>
-              <p class="date">{{ findDate.dateToday }}</p>
+        <div v-if="!forecastStore.errorText">
+          <div class="flex day-forecast" v-if="forecast">
+            <div class="day-forecast__info">
+              <div class="flex-column">
+                <span class="today">сегодня</span>
+                <p class="week-day">{{ findDate.weekDay }}</p>
+                <p class="date">{{ findDate.dateToday }}</p>
+              </div>
             </div>
+            <div class="time">{{ findDate.time }}</div>
           </div>
-          <div class="time">{{ findDate.time }}</div>
-        </div>
 
-        <div class="flex full-forecast" v-if="forecast.weather">
-          <ForecastItemFull :forecast="forecast" :currentImage="currentImage" />
-        </div>
+          <div class="flex full-forecast" v-if="forecast.weather">
+            <ForecastItemFull :forecast="forecast" :currentImage="currentImage" />
+          </div>
 
-        <div class="flex future-forecast" v-if="nextDaysForecastList">
-          <ForecastItemShort
-            v-for="day in days"
-            :key="day"
-            :forecastItem="validator(day.dtDay.toString(), day.dtNight.toString())"
-            :weekend="day.week"
-            :date="day.date"
-          /><!--:dtDay="day.dtDay.toString()"
+          <div class="flex future-forecast" v-if="nextDaysForecastList">
+            <ForecastItemShort
+              v-for="day in days"
+              :key="day"
+              :forecastItem="validator(day.dtDay.toString(), day.dtNight.toString())"
+              :weekend="day.week"
+              :date="day.date"
+            /><!--:dtDay="day.dtDay.toString()"
               :dtNight="day.dtNight.toString()"
           "-->
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="error-text" v-if="forecastStore.errorText">
-      <p>{{ errorText }}</p>
+      <div class="error-text" v-if="forecastStore.errorText">
+        <p>{{ errorText }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -63,12 +68,14 @@ import { useForecastStore } from '@/stores/forecast'
 import { useFindDateStore } from '@/stores/findDate'
 import { useWeatherImgStore } from '@/stores/weatherImg'
 
+import Loader from '@/components/Loader.vue'
 import ForecastItemFull from '@/components/ForecastItemFull.vue'
 import ForecastItemShort from '@/components/ForecastItemShort.vue'
 
 const forecastStore = useForecastStore()
 const findDate = useFindDateStore()
 const weatherImg = useWeatherImgStore()
+const loader = ref('false')
 
 const days = computed(() => {
   const week = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
@@ -170,12 +177,10 @@ const setLocalStorage = (city) => {
 watchEffect(() => (forecast.value = forecastStore.forecast))
 watchEffect(() => (nextDaysForecastList.value = forecastStore.forecastList))
 watchEffect(() => (errorText.value = forecastStore.errorText))
+watchEffect(() => (loader.value = forecastStore.loader))
 
 onMounted(async () => {
-  let currentCity = localStorage.getItem('город')
-  if (!currentCity) {
-    currentCity = 'Москва'
-  }
+  let currentCity = localStorage.getItem('город') ? localStorage.getItem('город') : 'Москва'
   await forecastStore.getCityForecast(currentCity)
   await forecastStore.getNextDaysForecasts(currentCity)
   nextDaysForecastList.value = forecastStore.forecastList
@@ -317,5 +322,10 @@ onMounted(async () => {
   justify-content: center;
   padding: 1rem;
   flex-wrap: wrap;
+}
+.loader {
+  left: calc(100vw / 2.5);
+  max-width: 50vw;
+  text-align: center;
 }
 </style>

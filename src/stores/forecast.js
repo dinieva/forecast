@@ -6,6 +6,7 @@ export const useForecastStore = defineStore('forecast', () => {
 
 const apiKey = import.meta.env.VITE_API_KEY_OPENWEATHERMAP;
 
+const loader = ref(true)
 const forecast = ref({})
 const timezone = ref({})
 const errorText = ref()
@@ -13,6 +14,8 @@ const fewDaysForecastData = ref()
 const forecastList = ref()
 
 const getCityForecast = async(cityName) => {
+  loader.value = true
+  console.log('start getCityForecast',  cityName);
         await axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&lang=ru&appid=${apiKey}&units=metric`)
         // await axios.get(`https://jsonplaceholder.typicode.com/users`)
 
@@ -22,8 +25,10 @@ const getCityForecast = async(cityName) => {
             console.log('func 1', cityName, forecast.value);
             // timezone.value = 10800 // временно так как превышено колличество запросов на сервер
             errorText.value = "" 
+            loader.value = false
           })
           .catch(function (error) {
+            loader.value = false
             forecast.value = ""
             errorText.value = "Информация не найдена" 
             console.log(error);
@@ -52,6 +57,7 @@ return {
     fewDaysForecastData,
     forecastList,
     getCityForecast,
-    getNextDaysForecasts
+    getNextDaysForecasts,
+    loader
     }
 })
