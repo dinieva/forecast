@@ -5,6 +5,7 @@
 
 Для обновления сайта на GitHub Pages после внесения изменений:
 npm run build 
+и 
 npm run deploy 
 
 ## Recommended IDE Setup
