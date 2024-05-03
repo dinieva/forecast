@@ -1,6 +1,11 @@
-# todo-list
+Для просмотра сайта на GitHub Pages включить VPN. 
 
-This template should help get you started developing with Vue 3 in Vite.
+"deploy": "gh-pages -d dist",
+"build": "vite build",
+
+Для обновления сайта на GitHub Pages после внесения изменений:
+npm run build 
+npm run deploy 
 
 ## Recommended IDE Setup
 
