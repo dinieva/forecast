@@ -40,7 +40,7 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 60px;
+  margin-top: 30px;
   padding-bottom: 2rem;
   align-items: center;
   text-align: center;

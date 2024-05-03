@@ -10,10 +10,10 @@
   color: var(--color-text);
   display: inline-block;
   position: relative;
-  font-size: 48px;
+  font-size: 2rem;
   font-family: Arial, Helvetica, sans-serif;
   box-sizing: border-box;
-  margin-top: 35vh;
+  // margin-top: 35vh;
 }
 .loader::after {
   content: '';

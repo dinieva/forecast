@@ -4,27 +4,26 @@
     <div class="loder" v-if="loader">
       <Loader />
     </div>
-    <div v-else>
-      <div class="wrapper">
-        <form
-          class="enter-city"
-          @submit.prevent="
-            forecastStore.getCityForecast(city.trim()),
-              forecastStore.getNextDaysForecasts(city.trim()),
-              setLocalStorage(city),
-              (city = '')
-          "
-        >
-          <input
-            class="searchbar transparent"
-            id="search"
-            type="text"
-            placeholder="Введите город"
-            v-model="city"
-          />
-          <button class="button transparent" id="button" type="submit">GO</button>
-        </form>
-
+    <div class="content" v-else>
+      <form
+        class="enter-city"
+        @submit.prevent="
+          forecastStore.getCityForecast(city.trim()),
+            forecastStore.getNextDaysForecasts(city.trim()),
+            setLocalStorage(city),
+            (city = '')
+        "
+      >
+        <input
+          class="searchbar transparent"
+          id="search"
+          type="text"
+          placeholder="Введите город"
+          v-model="city"
+        />
+        <button class="button transparent" id="button" type="submit">GO</button>
+      </form>
+      <div class="wrapper" v-if="!forecastStore.errorText">
         <div v-if="forecast.weather">
           <div class="flex day-forecast" v-if="forecast">
             <div class="day-forecast__info">
@@ -49,10 +48,11 @@
               :forecastItem="validator(day.dtDay.toString(), day.dtNight.toString())"
               :weekend="day.week"
               :date="day.date"
-            /><!--:dtDay="day.dtDay.toString()"
+            />
+          </div>
+          <!--:dtDay="day.dtDay.toString()"
               :dtNight="day.dtNight.toString()"
           "-->
-          </div>
         </div>
       </div>
 
@@ -192,18 +192,20 @@ onMounted(async () => {
 .date-info {
   position: relative;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   border-radius: 25px;
   color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .wrapper {
-  height: 100vh;
+  margin-top: 80px;
   display: flex;
   padding: 1.5rem;
   flex-direction: column;
   gap: 2rem;
-  /* justify-content: space-between; */
 }
 
 .week-day {
@@ -215,13 +217,11 @@ onMounted(async () => {
   margin-left: 2rem;
   font-size: 3rem;
 }
-.flex {
-  align-items: center;
-  color: #fff;
-}
+
 .flex-column {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 .day-forecast {
   display: flex;
@@ -294,24 +294,21 @@ onMounted(async () => {
 }
 .searchbar {
   float: left;
-  //   width: 380px;
   border-bottom: solid thin white;
-  // color: #e8e8e8;
   color: rgba(255, 255, 255, 1);
 }
 .transparent {
   background: transparent;
 }
 .enter-city {
+  position: absolute;
+  top: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .error-text {
-  position: absolute;
-  top: 45vh;
-  left: 40%;
   font-size: 2rem;
   text-align: center;
   color: #fff;
@@ -325,8 +322,18 @@ onMounted(async () => {
   flex-wrap: wrap;
 }
 .loader {
-  left: calc(100vw / 2.5);
-  max-width: 50vw;
   text-align: center;
+}
+.flex {
+  align-items: center;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 </style>

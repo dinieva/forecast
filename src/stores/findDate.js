@@ -47,11 +47,7 @@ export const useFindDateStore = defineStore('findDate', () => {
       return dateFind.value.toTimeString().substring(0, 5)
     })
 
-console.log('dateFind timezone '+ dateFind.value,
-  weekDay.value,
-  weekDayNum.value,
-  dateToday.value,
-  time.value);
+
     return {
         myTimeZoneValue,
         dateFind,

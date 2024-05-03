@@ -87,8 +87,10 @@ const props = defineProps({
   border-width: 1.5px !important;
   border-style: solid;
   border-radius: 3px;
-  font-size: 0.9rem;
+  font-size: 1rem;
   padding: 0.3rem;
+  background-color: rgba(153, 148, 148, 0.3);
+  font-weight: 500;
 }
 .temperature {
   font-size: 3rem;
