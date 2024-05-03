@@ -1,12 +1,19 @@
 Для просмотра сайта на GitHub Pages включить VPN. 
-
+```sh
 "deploy": "gh-pages -d dist",
+```
+```sh
 "build": "vite build",
+```
 
 Для обновления сайта на GitHub Pages после внесения изменений:
+```sh
 npm run build 
-и 
+```
+```sh
 npm run deploy 
+```
+
 
 ## Recommended IDE Setup
 
