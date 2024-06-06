@@ -1,4 +1,5 @@
 Для просмотра сайта на GitHub Pages включить VPN. 
+<<<<<<< HEAD
 
 "deploy": "gh-pages -d dist",
 "build": "vite build",
@@ -6,6 +7,23 @@
 Для обновления сайта на GitHub Pages после внесения изменений:
 npm run build 
 npm run deploy 
+=======
+```sh
+"deploy": "gh-pages -d dist",
+```
+```sh
+"build": "vite build",
+```
+
+Для обновления сайта на GitHub Pages после внесения изменений:
+```sh
+npm run build 
+```
+```sh
+npm run deploy 
+```
+
+>>>>>>> b86c40b33817ed622923f5895831b0c4bac05dde
 
 ## Recommended IDE Setup
 
