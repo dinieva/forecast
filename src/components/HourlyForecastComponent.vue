@@ -1,31 +1,29 @@
-<template >
-  <div class="forecast-item__wrapper" v-if="forecastItem !== null">
-    <div class="forecast__day">{{ weekend }}</div>
-    <div class="forecast__date">{{ date }}</div>
-    <div class="forecast__img" v-if="forecastItem.svg">
-      <img :src="forecastItem.svg.path" :alt="forecastItem.svg.title" class="weather-image" />
+<template>
+  <div class="forecast-item__wrapper" v-if="hourForecastData !== null">
+    <div class="forecast__hour">{{ hour.slice(10, -3) }}</div>
+    <div class="forecast__img" v-if="svg">
+      <img :src="svg[0].path" :alt="svg[0].title" class="weather-image" />
     </div>
+    <div class="forecast__max-temp">{{ Math.ceil(hourForecastData.main.temp) }}°C</div>
 
-    <div class="forecast__max-temp">Днем: {{ Math.ceil(forecastItem.dayTemp) }}</div>
-    <div class="forecast__min-temp">Ночью: {{ Math.ceil(forecastItem.nightTemp) }}</div>
-    <div class="forecast__condition" v-if="forecastItem.weather">
-      <p class="forecast__condition-text">{{ forecastItem.weather[0].description }}</p>
+    <div class="forecast__condition" v-if="hourForecastData.weather">
+      <p class="forecast__condition-text">{{ hourForecastData.weather[0].description }}</p>
     </div>
   </div>
 </template>
 
 <script setup>
-const props = defineProps({
-  forecastItem: {
+defineProps({
+  hourForecastData: {
     type: Object,
     required: true
   },
-  weekend: {
+  hour: {
     type: String,
     required: true
   },
-  date: {
-    type: String,
+  svg: {
+    type: Object,
     required: true
   }
 })
@@ -36,12 +34,12 @@ const props = defineProps({
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-top: 30px;
+  // margin-top: 30px;
   padding-bottom: 2rem;
   align-items: center;
   text-align: center;
   padding: 0.5rem;
-  width: 10rem;
+  // width: 10rem;
   overflow: hidden;
   box-sizing: border-box;
   position: relative;
@@ -50,11 +48,8 @@ const props = defineProps({
   font-size: 14px;
   line-height: 22px;
   white-space: nowrap;
-
-  &:hover {
-    background-color: #fff;
-    border: 1px solid #214ead;
-  }
+  min-width: 10rem;
+  margin: 5px;
 }
 
 .forecast__day {

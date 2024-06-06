@@ -34,8 +34,7 @@ const getCityForecast = async(cityName) => {
             console.log(error);
           });
     } 
-    
-
+   
 const getNextDaysForecasts = async(city) => {
   
     // await axios.get(`api.openweathermap.org/data/2.5/forecast?q=London&cnt=3&lang=ru&appid=${apiKey}&units=metric`)
@@ -57,7 +56,9 @@ return {
     errorText,
     fewDaysForecastData,
     forecastList,
+    
     getCityForecast,
+    
     getNextDaysForecasts,
     loader
     }

@@ -10,6 +10,7 @@
         @submit.prevent="
           forecastStore.getCityForecast(city.trim()),
             forecastStore.getNextDaysForecasts(city.trim()),
+            threeHoursForecastStore.getThreeHoursForecast(city.trim()),
             setLocalStorage(city),
             (city = '')
         "
@@ -41,14 +42,30 @@
             <ForecastItemFull :forecast="forecast" :currentImage="currentImage" />
           </div>
 
-          <div class="flex future-forecast" v-if="nextDaysForecastList">
-            <ForecastItemShort
-              v-for="day in days"
-              :key="day"
-              :forecastItem="validator(day.dtDay.toString(), day.dtNight.toString())"
-              :weekend="day.week"
-              :date="day.date"
-            />
+          <div class="hourly-forecast" v-if="hoursForecastData">
+            <div><p>Текущая погода</p></div>
+            <div class="hourly-forecast-items">
+              <HourlyForecastComponent
+                v-for="info in hoursForecastData"
+                :key="info"
+                :hourForecastData="info"
+                :hour="info.dt_txt"
+                :svg="findSvgPath(info.weather[0].description)"
+              />
+            </div>
+          </div>
+
+          <div class="future-forecast" v-if="nextDaysForecastList">
+            <div><p>Следующие дни</p></div>
+            <div class="flex">
+              <ForecastItemShort
+                v-for="day in days"
+                :key="day"
+                :forecastItem="validator(day.dtDay.toString(), day.dtNight.toString())"
+                :weekend="day.week"
+                :date="day.date"
+              />
+            </div>
           </div>
           <!--:dtDay="day.dtDay.toString()"
               :dtNight="day.dtNight.toString()"
@@ -67,13 +84,16 @@
 import { ref, computed, watchEffect, onMounted } from 'vue'
 import { useForecastStore } from '@/stores/forecast'
 import { useFindDateStore } from '@/stores/findDate'
+import { useThreeHoursForecastStore } from '@/stores/threeHoursDayForecast'
 import { useWeatherImgStore } from '@/stores/weatherImg'
 
 import Loader from '@/components/Loader.vue'
 import ForecastItemFull from '@/components/ForecastItemFull.vue'
+import HourlyForecastComponent from '@/components/HourlyForecastComponent.vue'
 import ForecastItemShort from '@/components/ForecastItemShort.vue'
 
 const forecastStore = useForecastStore()
+const threeHoursForecastStore = useThreeHoursForecastStore()
 const findDate = useFindDateStore()
 const weatherImg = useWeatherImgStore()
 const loader = ref('false')
@@ -137,6 +157,7 @@ const days = computed(() => {
 
 const city = ref()
 const forecast = ref()
+const hoursForecastData = ref([])
 const nextDaysForecastList = ref([])
 const errorText = ref()
 const currentImage = computed(() => {
@@ -175,7 +196,12 @@ const setLocalStorage = (city) => {
   localStorage.setItem('город', city.trim())
 }
 
+const findSvgPath = (descr) => {
+  const currentSvg = weatherImg.weatherSvg.filter((img) => img.title == descr)
+  return currentSvg
+}
 watchEffect(() => (forecast.value = forecastStore.forecast))
+watchEffect(() => (hoursForecastData.value = threeHoursForecastStore.hoursForecastList))
 watchEffect(() => (nextDaysForecastList.value = forecastStore.forecastList))
 watchEffect(() => (errorText.value = forecastStore.errorText))
 watchEffect(() => (loader.value = forecastStore.loader))
@@ -183,21 +209,34 @@ watchEffect(() => (loader.value = forecastStore.loader))
 onMounted(async () => {
   let currentCity = localStorage.getItem('город') ? localStorage.getItem('город') : 'Москва'
   await forecastStore.getCityForecast(currentCity)
+  await threeHoursForecastStore.getThreeHoursForecast(currentCity)
   await forecastStore.getNextDaysForecasts(currentCity)
+  hoursForecastData.value = threeHoursForecastStore.hoursForecastList
   nextDaysForecastList.value = forecastStore.forecastList
 })
 </script>
 
 <style lang="scss" scoped>
+.loader {
+  text-align: center;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  overflow: hidden;
+}
 .date-info {
   position: relative;
-  width: 100vw;
+  // width: 100vw;
   min-height: 100vh;
   border-radius: 25px;
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .wrapper {
@@ -316,24 +355,42 @@ onMounted(async () => {
 .full-forecast {
   justify-content: center;
 }
-.future-forecast {
-  justify-content: center;
+.future-forecast,
+.hourly-forecast {
+  max-width: 80vw;
+  display: flex;
+  flex-direction: column;
+  color: #939cb0;
   padding: 1rem;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
+  /*  @media (max-width: 1000px) {
+    width: calc(100vw / 2);
+  }
+  @media (max-width: 580px) {
+    width: calc(100vw / 1.3);
+  } */
 }
-.loader {
-  text-align: center;
+.hourly-forecast {
+  // overflow: hidden;
+  margin-top: 30px;
+  border-top: 1px solid grey;
+  border-bottom: 1px solid grey;
+  &-items {
+    display: flex;
+    min-width: 100%;
+    min-height: 200px;
+    overflow-x: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }
+
 .flex {
   align-items: center;
   color: #fff;
   display: flex;
   justify-content: center;
-}
-.content {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  flex-wrap: wrap;
 }
 </style>

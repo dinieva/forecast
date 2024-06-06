@@ -11,7 +11,7 @@ export const useFindDateStore = defineStore('findDate', () => {
       let dateInMs = date.getTime() // в миллисекундах
     
       //шаг 2 прослойка между текущим временем региона (utc +3) и временем для города в поиске, то есть находим всемирное время (utc 0)
-      /*const myTimeZoneValue = 10800 // цифра миллисекунд в timeZone */
+      // сonst myTimeZoneValue = 10800 // цифра миллисекунд в timeZone
       // const dateUTCInMs = dateInMs - myTimeZoneValue * 1000
       const dateUTCInMs = dateInMs + myTimeZoneValue
       //шаг 3 время для города по поиску отталкиваясь от  (utc 0)
@@ -20,7 +20,6 @@ export const useFindDateStore = defineStore('findDate', () => {
          return forecastStore.timezone
       })
      let newDateInMs = dateUTCInMs + timezone.value * 1000 // время для города в другой таймзоне в миллисекундах
-    
       return new Date(newDateInMs)
     })
     
